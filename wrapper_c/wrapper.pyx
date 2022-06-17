@@ -236,6 +236,9 @@ def power_on(axis:int=0):
 def designated_homing(axis:int=0):
     wrap_designated_homing(axis)
 
+def designated_homing_a(axis:int=0):
+    wrap_designated_homing_a(axis)
+
 def reset(axis:int=0):
     wrap_reset(axis)
 
