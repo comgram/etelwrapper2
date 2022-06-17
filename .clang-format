@@ -14,7 +14,7 @@
 "AlwaysBreakTemplateDeclarations" : "true"
 "Standard" : "C++11"
 "PPIndentWidth": 4
-"QualifierAlignmentStyle": "Left"
+# "QualifierAlignmentStyle": "Left"
 "ReferenceAlignment": "Right"
 "ReflowComments": "true"
 "SpaceAroundPointerQualifiers": "After"

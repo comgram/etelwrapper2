@@ -92,38 +92,49 @@
 
 #define IPOL_HOME_GRP0   21 // machine coords
 
-int POSITION_CONTROLLER_COUNT = 2;
+int              POSITION_CONTROLLER_COUNT = 2;
 
 // Assignement of drive an group
-DSA_DRIVE *x = NULL;
-DSA_DRIVE *y = NULL;
-DSA_DRIVE *z = NULL;
-DSA_DRIVE *d = NULL;
+DSA_DRIVE       *x                         = NULL;
+DSA_DRIVE       *y                         = NULL;
+DSA_DRIVE       *z                         = NULL;
+DSA_DRIVE       *d                         = NULL;
 
-DSA_MASTER *ultimet = NULL;
+DSA_MASTER      *ultimet                   = NULL;
 
-DSA_DRIVE_GROUP *xy  = NULL;
-DSA_DRIVE_GROUP *xz  = NULL;
-DSA_DRIVE_GROUP *yz  = NULL;
-DSA_DRIVE_GROUP *xyz = NULL;
+DSA_DRIVE_GROUP *xy                        = NULL;
+DSA_DRIVE_GROUP *xz                        = NULL;
+DSA_DRIVE_GROUP *yz                        = NULL;
+DSA_DRIVE_GROUP *xyz                       = NULL;
 
-DSA_IPOL_GROUP *igrp0 = NULL;
-DSA_IPOL_GROUP *igrp1 = NULL;
+DSA_IPOL_GROUP  *igrp0                     = NULL;
+DSA_IPOL_GROUP  *igrp1                     = NULL;
 
 // variable for error return
-int err;
+int              err;
 
 // active interpolation group
-int active_interpolation_group_no = -1;
-int default_unit                  = 1;
-int workpiece_location[3]         = {0, 0, 0};
-int homing_done                   = 0;
-int coordinate_mode               = 0;
-int open_prepared                 = 0;
-int connected                     = 0;
-int powered                       = 0;
+int              active_interpolation_group_no = -1;
+int              default_unit                  = 1;
+int              workpiece_location[3]         = {0, 0, 0};
+int              homing_done                   = 0;
+int              coordinate_mode               = 0;
+int              open_prepared                 = 0;
+int              connected                     = 0;
+int              powered                       = 0;
+int state_seq = 0;
 
-DSA_DRIVE_BASE *Axis(int axis)
+// DSA_HANDLER set_state_seq(int state)
+// {
+//     state_seq = state;
+// }
+
+// get_state_seq()
+// {
+//     return state_seq;
+// }
+
+DSA_DRIVE_BASE  *Axis(int axis)
 {
     switch (axis) {
     // Drive
@@ -161,17 +172,17 @@ DSA_DRIVE_BASE *Axis(int axis)
 int error_action(void)
 {
     /* Destroy the group if not already done. */
-//    if (dsa_is_valid_ipol_group(igrp0)) {
-//        if (dsa_is_ipol_in_progress(igrp0))
-//            dsa_ipol_end_s(igrp0, DSA_DEF_TIMEOUT);
-//        dsa_destroy(&igrp0);
-//    }
-//
-//    if (dsa_is_valid_ipol_group(igrp1)) {
-//        if (dsa_is_ipol_in_progress(igrp1))
-//            dsa_ipol_end_s(igrp1, DSA_DEF_TIMEOUT);
-//        dsa_destroy(&igrp1);
-//    }
+    //    if (dsa_is_valid_ipol_group(igrp0)) {
+    //        if (dsa_is_ipol_in_progress(igrp0))
+    //            dsa_ipol_end_s(igrp0, DSA_DEF_TIMEOUT);
+    //        dsa_destroy(&igrp0);
+    //    }
+    //
+    //    if (dsa_is_valid_ipol_group(igrp1)) {
+    //        if (dsa_is_ipol_in_progress(igrp1))
+    //            dsa_ipol_end_s(igrp1, DSA_DEF_TIMEOUT);
+    //        dsa_destroy(&igrp1);
+    //    }
 
     /* Is the drive pointer valid ? */
     if (dsa_is_valid_drive(x)) {
@@ -255,20 +266,20 @@ int wrap_is_open(int axis, unsigned char *buf)
 
 int wrap_designated_open_prepare(void)
 {
-    x = NULL;
-    y = NULL;
-    z = NULL;
-    d = NULL;
+    x       = NULL;
+    y       = NULL;
+    z       = NULL;
+    d       = NULL;
 
     ultimet = NULL;
 
-    xy  = NULL;
-    xz  = NULL;
-    yz  = NULL;
-    xyz = NULL;
+    xy      = NULL;
+    xz      = NULL;
+    yz      = NULL;
+    xyz     = NULL;
 
-    igrp0 = NULL;
-    igrp1 = NULL;
+    igrp0   = NULL;
+    igrp1   = NULL;
 
     // create dirve and master
     if (err = dsa_create_drive(&x)) {
@@ -408,28 +419,53 @@ int wrap_designated_open(const char *url, int port, int keep_alive)
     // open device
 
     char buf[255];
-    sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d,T=%d:%d", url, port, keep_alive, X_DRIVE);
+    if (keep_alive == -1) {
+        sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d,T=-1:%d", url, port, X_DRIVE);
+    }
+    else {
+        sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d:%d", url, port, X_DRIVE);
+    }
     /**if (err = dsa_open_u(x, "etb:ETN://172.30.1.80:1129,T=-1:1")) {*/
     if (err = dsa_open_u(x, buf)) {
         DSA_EXT_DIAG(err, x);
         return error_action();
     }
-    sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d,T=%d:%d", url, port, keep_alive, Y_DRIVE);
+    if (keep_alive == -1) {
+        sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d,T=-1:%d", url, port, Y_DRIVE);
+    }
+    else {
+        sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d:%d", url, port, Y_DRIVE);
+    }
     if (err = dsa_open_u(y, buf)) {
         DSA_EXT_DIAG(err, y);
         return error_action();
     }
-    sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d,T=%d:%d", url, port, keep_alive, Z_DRIVE);
+    if (keep_alive == -1) {
+        sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d,T=-1:%d", url, port, Z_DRIVE);
+    }
+    else {
+        sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d:%d", url, port, Z_DRIVE);
+    }
     if (err = dsa_open_u(z, buf)) {
         DSA_EXT_DIAG(err, z);
         return error_action();
     }
-    sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d,T=%d:%d", url, port, keep_alive, D_DRIVE);
+    if (keep_alive == -1) {
+        sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d,T=-1:%d", url, port, D_DRIVE);
+    }
+    else {
+        sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d:%d", url, port, D_DRIVE);
+    }
     if (err = dsa_open_u(d, buf)) {
         DSA_EXT_DIAG(err, d);
         return error_action();
     }
-    sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d,T=%d:*", url, port, keep_alive);
+    if (keep_alive == -1) {
+        sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d,T=-1:*", url, port);
+    }
+    else {
+        sprintf_s(buf, sizeof(buf), "etb:ETN://%s:%d:*", url, port);
+    }
     if (err = dsa_open_u(ultimet, buf)) {
         DSA_EXT_DIAG(err, ultimet);
         return error_action();
@@ -763,6 +799,25 @@ int wrap_designated_homing(int axis)
         Sleep(1000);
     }
     else {
+        if (err = dsa_execute_sequence_s(Axis(axis), SEQ_HOMING,0, 10000)) {
+            DSA_EXT_DIAG(err, Axis(axis));
+            return error_action();
+        }
+    }
+
+    return 1;
+}
+
+int wrap_designated_homing_a(int axis)
+{
+    if (axis == 0) {
+        printf("homing %d\n", SEQ_HOMING);
+        if (err = dsa_execute_sequence_s(ultimet, SEQ_HOMING, 10000)) {
+            DSA_EXT_DIAG(err, ultimet);
+            return error_action();
+        }
+    }
+    else {
         if (err = dsa_execute_sequence_s(Axis(axis), SEQ_HOMING, 10000)) {
             DSA_EXT_DIAG(err, Axis(axis));
             return error_action();
@@ -981,6 +1036,20 @@ int wrap_exec_sequence(int axis, int no)
     return 1;
 }
 
+int wrap_exec_sequence_a(int axis, int no)
+{
+    if (err = dsa_set_register_int32_s(Axis(axis), DMD_TYP_USER_INT32, SEQ_FLAG, 0, 1, DSA_DEF_TIMEOUT)) {
+        DSA_EXT_DIAG(err, Axis(axis));
+        return error_action();
+    }
+    if (err = dsa_execute_sequence_s(Axis(axis), no, 10000)) {
+        DSA_EXT_DIAG(err, Axis(axis));
+        return error_action();
+    }
+
+    return 1;
+}
+
 int wrap_wait_sequence(int axis)
 {
     DSA_STATUS status = {sizeof(DSA_STATUS)};
@@ -1074,11 +1143,9 @@ int wrap_is_ipol_in_progress(int igrp, int *buf)
 
 int wrap_ipol_begin(int igrp)
 {
-    if (dsa_is_ipol_in_progress(igrp0))
-        dsa_ipol_end_s(igrp0, DSA_DEF_TIMEOUT);
+    if (dsa_is_ipol_in_progress(igrp0)) dsa_ipol_end_s(igrp0, DSA_DEF_TIMEOUT);
 
-    if (dsa_is_ipol_in_progress(igrp1))
-        dsa_ipol_end_s(igrp1, DSA_DEF_TIMEOUT);
+    if (dsa_is_ipol_in_progress(igrp1)) dsa_ipol_end_s(igrp1, DSA_DEF_TIMEOUT);
 
     if (err = dsa_ipol_prepare_s(Axis(igrp), DSA_DEF_TIMEOUT)) {
         DSA_EXT_DIAG(err, Axis(igrp));
@@ -1943,14 +2010,7 @@ int wrap_cmd_ipt(int igrp_no, int inc_pos_x, int inc_pos_y, int inc_pos_z, int a
     return 1;
 }
 
-int wrap_cmd_ipvt(int igrp_no,
-                  int inc_pos_x,
-                  int inc_pos_y,
-                  int inc_pos_z,
-                  int inc_vel_x,
-                  int inc_vel_y,
-                  int inc_vel_z,
-                  int atime)
+int wrap_cmd_ipvt(int igrp_no, int inc_pos_x, int inc_pos_y, int inc_pos_z, int inc_vel_x, int inc_vel_y, int inc_vel_z, int atime)
 {
     DSA_COMMAND_PARAM param[10];
 
@@ -2179,7 +2239,7 @@ int wrap_cmd_jmp(int axis, int no, int thread)
 
 int wrap_cmd_jmp_a(int axis, int no, int thread)
 {
-    if (err = dsa_execute_command_dd_a(Axis(axis),
+    if (err = dsa_execute_command_dd_s(Axis(axis),
                                        CMD_JMP,
                                        DMD_TYP_IMMEDIATE_INT32,
                                        no,
@@ -2215,7 +2275,7 @@ int wrap_cmd_ujmp(int no, int thread)
 
 int wrap_cmd_ujmp_a(int no, int thread)
 {
-    if (err = dsa_execute_command_dd_a(ultimet,
+    if (err = dsa_execute_command_dd_s(ultimet,
                                        CMD_JMP,
                                        DMD_TYP_IMMEDIATE_INT32,
                                        no,
@@ -3225,13 +3285,7 @@ int wrap_cmd_move_z_abs(int inc_pos_z)
 }
 
 // ipol cmd(inc) enhanced wrapping
-int wrap_cmd_ipol_move_xyz_abs(int igrp_no,
-                               int inc_pos_x,
-                               int inc_pos_y,
-                               int inc_pos_z,
-                               int all_axis,
-                               int safe,
-                               int safe_pos_z)
+int wrap_cmd_ipol_move_xyz_abs(int igrp_no, int inc_pos_x, int inc_pos_y, int inc_pos_z, int all_axis, int safe, int safe_pos_z)
 {
     DSA_COMMAND_PARAM param[5];
 
@@ -3239,14 +3293,14 @@ int wrap_cmd_ipol_move_xyz_abs(int igrp_no,
     param[0].conv  = 0;
     param[0].val.i = igrp_no;
 
-    param[1].typ  = DMD_TYP_IMMEDIATE_INT32;
-    param[1].conv = 0;
+    param[1].typ   = DMD_TYP_IMMEDIATE_INT32;
+    param[1].conv  = 0;
 
-    param[2].typ  = DMD_TYP_IMMEDIATE_INT32;
-    param[2].conv = 0;
+    param[2].typ   = DMD_TYP_IMMEDIATE_INT32;
+    param[2].conv  = 0;
 
-    param[3].typ  = DMD_TYP_IMMEDIATE_INT32;
-    param[3].conv = 0;
+    param[3].typ   = DMD_TYP_IMMEDIATE_INT32;
+    param[3].conv  = 0;
 
     param[4].typ   = DMD_TYP_IMMEDIATE_INT32;
     param[4].conv  = 0;

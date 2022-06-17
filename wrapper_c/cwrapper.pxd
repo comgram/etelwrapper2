@@ -23,9 +23,9 @@ ctypedef long long __int64
     int wrap_cmd_imshear(int igrp_no, int inc_shear_x, int inc_shear_y, int inc_shear_z)
     int wrap_cmd_imtrans(int igrp_no, int inc_trans_x, int inc_trans_y, int inc_trans_z)
     int wrap_cmd_ipol_move_xy_abs(int igrp_no, int inc_pos_x, int inc_pos_y)
-    int wrap_cmd_ipol_move_xyz_abs(int igrp_no,
+    int wrap_cmd_ipol_move_xyz_abs(int igrp_no, int inc_pos_x, int inc_pos_y, int inc_pos_z, int all_axis, int safe, int safe_pos_z)
     int wrap_cmd_ipt(int igrp_no, int inc_pos_x, int inc_pos_y, int inc_pos_z, int atime)
-    int wrap_cmd_ipvt(int igrp_no,
+    int wrap_cmd_ipvt(int igrp_no, int inc_pos_x, int inc_pos_y, int inc_pos_z, int inc_vel_x, int inc_vel_y, int inc_vel_z, int atime)
     int wrap_cmd_iset(int igrp_no)
     int wrap_cmd_itacc(int igrp_no, int inc_acc)
     int wrap_cmd_itdec(int igrp_no, int inc_dec)
@@ -58,6 +58,7 @@ ctypedef long long __int64
     int wrap_convert_int64_from_iso(int axis, double value, int conv, __int64 *buf)
     int wrap_convert_int64_to_iso(int axis, __int64 value, int conv, double *buf)
     int wrap_designated_homing(int axis)
+    int wrap_designated_homing_a(int axis)
     int wrap_designated_open(const char *url, int port, int keep_alive)
     int wrap_designated_open_prepare()
     int wrap_destory_group()
@@ -65,6 +66,7 @@ ctypedef long long __int64
     int wrap_digital_input_status(int axis, int *buf)
     int wrap_digital_output_status(int axis, int *buf)
     int wrap_exec_sequence(int axis, int no)
+    int wrap_exec_sequence_a(int axis, int no)
     int wrap_get_actual_value(int axis, double *buf)
     int wrap_get_axis_number(int axis, int *buf)
     int wrap_get_demand_value(int axis, double *buf)
