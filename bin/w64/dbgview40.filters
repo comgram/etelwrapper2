@@ -1,0 +1,30 @@
+#--------------------------------------------
+#DBGVIEW Filters
+#--------------------------------------------
+#ETCOM sent to the specified axis mask are not shown.
+#For ETCOM sent to several axis, if one of the axis is not tagged by Hide Axes Mask, the record will be displayed.
+#Tag Hide Axes Mask = is fixed, the axes mask must be specified in Hexadecimal
+#Example Hide Axes Mask = 0x02 (Does not show all record concerning axis 1)
+Hide Axes Mask = 
+
+#ETCOM of specified records are not shown
+#Tag Hide Record List = is fixed, the records can be specified in Hexadecimal (starting with 0x) or Decimal and separated by a ;
+#Example Hide Record List = 0x12; 0x2E (Does not show all record 0x12 and 0x2E)
+Hide Record List = 
+
+#ETCOM of specified commands are not shown
+#Tag Hide Command List: is fixed, the command must be specified in Hexadecimal (starting with 0x) or Decimal. Each command must be and separated by a ;
+#Example Hide Command List = 124; 0x2D (Does not show all ETCOM concerning command 124 (PWR) and Command 0x2D (IND))
+Hide Command List = 
+
+#ETCOM concerning the getting of specified registers are not shown.
+#For ETCOM getting several registers, if one of the register is not tagged by Hide Get Register List, the record will be displayed.
+#Tag Hide Get Register List: is fixed, the register must be specified by its name followed by its number. Each register must be and separated by a ;
+#Example Hide Get Register List = M60; M61; M96 (Does not show all ETCOM concerning getting Register M60, M61, and M96)
+#For Hide ComET Polling, use Hide Get Register List = M96; M97; M70; M64; M66; M95; M60; M90
+Hide Get Register List = 
+
+#ETCOM concerning the setting of specified registers are not shown
+#Tag Hide Set Register List: is fixed, the register must be specified by its name followed by its number. Each register must be and separated by a ;
+#Example Hide Set Register List = KL34; KL35 (Does not show all ETCOM concerning Setting Register KL34 and KL35
+Hide Set Register List = 

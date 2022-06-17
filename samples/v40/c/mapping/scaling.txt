@@ -1,0 +1,44 @@
+[Header]
+[[General info]]
+Data type,Scale error mapping
+Data format version,1.00A
+Software name,ComET Scale mapping tool
+Software version,2.10B
+Date,10/11/2009
+Time,13:01:48
+Operator,MMH
+Customer,My 2nd custormer
+Project,Zeus mapping
+Description,X scale error mapping
+
+[[Controller info]]
+Controller name list,EA-P2M-400-10/20A-0000-00, EA-P2M-400-10/20A-0000-00
+Controller firmware list,1.02B,1.02B
+Controller address list,0,1
+Controller SN, 25548447, 25548447
+Controller status,0x20290000,0x20290000
+
+[[Scale error mapping configuration]]
+Mapping version,1.01A
+Machine type,Zeus
+Machine SN,12345
+Correction mode,positive
+Axis,X,0
+
+[[[Configuration 1]]]
+Corrected axis,X
+Source axes,X
+Source registers,ML19
+Source cyclic stroke,X,1.0
+Correction table,table 1
+Origin,X,-0.123
+
+[Data]
+[[Info table 1]]
+Step size,1.0e-3
+Table size,20
+Data unit factor,-8
+[[Data table 1]]
+-1.0,2.0,-1.0,2.0,2.0,-1.0,2.0,-1.0,2.0,2.0,-1.0,2.0,-1.0,2.0,2.0,-1.0,2.0,-1.0,2.0,2.0
+
+[End Of File]

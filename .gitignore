@@ -1,0 +1,13 @@
+build/
+my_dist
+wrapper_c/test/*.dll
+wrapper_c/test/7z.exe
+wrapper_c/wrapper.c 
+wrapper_cpp/test/*.dll
+wrapper_cpp/test/7z.exe
+wrapper_cpp/wrapper.cpp
+.ccls-cache 
+.DS_Store
+wrapper_c/test/wrapper.cp38-win_amd64.pyd
+wrapper_cpp/test/wrapper.cp38-win_amd64.pyd
+.history/

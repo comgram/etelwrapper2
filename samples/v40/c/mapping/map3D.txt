@@ -1,0 +1,121 @@
+// This file contains information related to the configuration
+// of stage error mapping applied to a 3D stage
+// Axis Y is made of axes Y1 and Y2
+// the file format is based on the one used in ComET identification files
+//
+// The stage error mapping data will be stored in AccurET controllers
+// thus the different string values must not have a length bigger than 32 characters
+// (8 depths of 4 bytes)
+[Header]
+[[General info]]
+Data type,Stage error mapping
+Data format version,1.00A
+Software name,ComET Stage mapping tool
+Software version,2.10B
+Date,10/11/2009
+Time,13:01:48
+Operator,MMH
+Customer,My 2nd custormer
+Project,Zeus mapping
+Description,XYZ stage error mapping
+
+[[Controller info]]
+Controller name list,
+Controller firmware list,
+Controller address list,0,1,2
+Controller SN,
+Controller status,
+
+[[Stage error mapping configuration]]
+// fields for customer information needs
+Mapping version,1.01A  
+Machine type,Zeus
+Machine SN,12345
+// this mapping mode is either error (substraction of the values) or correction (add of the values))
+Correction mode,positive
+// define of axes names, used below for the specifying which axis is concerned
+Axis,X,0 // axis number, from 0 to 62
+Axis,Y,1
+Axis,Z,2
+
+[[[Configuration 1]]]
+Corrected axis,X
+Correction dimensions,3
+Source axes,X,Y,Z 		// defines the correction function: CorrectionOnX=func(posX,posY1,posZ)
+							// in this example, corrections depending on X positions are stored as a row,
+							// those depending on Y as a column, and Z as the 3rd dimension (tableX below)
+							// If the customer has arranged the data in a different way, X, Y1 and Z order
+							// may be changed
+Source registers,ML17,ML17,ML17	// defines the source registers
+Correction table,table 1	// X corrections are taken from the correction table 1
+Origin,X,-0.123				// corrections table origins in X, Y1 and Z are defined in ISO units
+Origin,Y,0.0
+Origin,Z,0.1020
+
+[[[Configuration 2]]]
+Corrected axis,Y
+Correction dimensions,3
+Source axes,X,Y,Z
+Source registers,ML17,ML17,ML17	// defines the source registers
+Correction table,table 2
+Origin,X,-0.123				// these origins may differ from the above mentioned axis X configuration paragraph
+Origin,Y,0.0
+Origin,Z,0.1020
+
+[[[Configuration 3]]]
+Corrected axis,Z
+Correction dimensions,3
+Source axes,X,Y,Z
+Source registers,ML17,ML17,ML17	// defines the source registers
+Correction table,table 3
+Origin,X,-0.123
+Origin,Y,0.0
+Origin,Z,0.1020
+
+
+// here are stored corrections tables and information related to these tables
+[Data]
+// the info and data of the correction table from axis X are stored in the below chunks. 
+[[Info table 1]]
+Step size,10.0e-3,10.0e-3,10.0e-3 	// the data order is related to the positionInputs defintion 
+Table size,3,3,2					// the data order is related to the positionInputs defintion 
+Data unit factor,-8					// this means that the DataTable contains values in 100th of micrometers
+
+[[Data table 1]]					// the data is arrange in user friendly way. The comma mark is considered as the separation between data
+-1.0,2.0,-1.0				//<Table size,n colonnes, m lignes, d blocs>
+-2.0,-1.0,0.0
+-3.0,-2.0,-1.0
+					//ligne vide indispensable
+-1.0,2.0,-1.0
+-2.0,-1.0,0.0
+-3.0,-2.0,-1.0
+					//ligne vide indispensable
+[[Info table 2]]
+Step size,10.0e-3,10.0e-3,10.0e-3
+Table size,3,3,2
+Data unit factor,-8
+
+[[Data table 2]]
+-1.0,2.0,-1.0				//<Table size,n colonnes, m lignes, d blocs>
+-2.0,-1.0,0.0
+-3.0,-2.0,-1.0
+					//ligne vide indispensable
+-1.0,2.0,-1.0
+-2.0,-1.0,0.0
+-3.0,-2.0,-1.0
+					//ligne vide indispensable
+[[Info table 3]]
+Step size,10.0e-3,10.0e-3,10.0e-3
+Table size,3,3,2
+Data unit factor,-8
+
+[[Data table 3]]
+-1.0,2.0,-1.0				//<Table size,n colonnes, m lignes, d blocs>
+-2.0,-1.0,0.0
+-3.0,-2.0,-1.0
+					//ligne vide indispensable
+-1.0,2.0,-1.0
+-2.0,-1.0,0.0
+-3.0,-2.0,-1.0
+					//ligne vide indispensable
+[End Of File]
